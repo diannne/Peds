@@ -52,8 +52,6 @@
             </div>
 
             <div id="wrapper">
-                <div id="nav">
-                </div>
                 <div id="workarea" class="clearfix">
 
                     <div id="presentation" class="clearfix">

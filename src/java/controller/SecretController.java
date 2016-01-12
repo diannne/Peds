@@ -12,15 +12,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import model.Consultations;
 import model.Kids;
 import model.Parents;
 import model.Pediatricians;
 import model.Specialties;
+import model.UserRoles;
 import model.Users;
 import model.Visit;
 import org.springframework.stereotype.Controller;
@@ -44,7 +47,11 @@ public class SecretController {
     @RequestMapping(value = {"/secretary"})
     public String secretManagementPage(ModelMap map) {
         DatabaseService db = new DatabaseService();
-        map.addAttribute("list", db.listEntity("parents"));
+        List results = (List) map.get("list");
+        if(results == null)
+            map.addAttribute("list", db.listEntity("parents"));
+        else
+            map.addAttribute("list", results);
         return "secret";
     }
 
@@ -599,6 +606,31 @@ public class SecretController {
 
         redirectAttrs.addFlashAttribute("info", "Succesfully updated children information!");
         return "redirect:/secret/patient/" + pid + "/kid/" + kid + "/";
+    }
+    
+        @RequestMapping(value = {"/secretary/searchpatient"}, 
+            method = RequestMethod.POST)
+    public String searchForm(HttpServletRequest request, RedirectAttributes attr)
+            throws ClassNotFoundException, 
+            InstantiationException, IllegalAccessException{
+        String table = request.getParameter("table");
+        String text = request.getParameter("q_text");
+        String cols = request.getParameter("columns");
+        ArrayList<String> columns = new ArrayList<>();
+        
+        String[] result = cols.split(Pattern.quote("|"));
+        for (int x=0; x<result.length; x++)
+            columns.add(result[x]);
+        DatabaseService dbService = new DatabaseService();
+        List result_list = dbService.listEntityPartialQuery(table, columns, text);
+        String str = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        
+        attr.addFlashAttribute("list", result_list);
+        attr.addFlashAttribute("q_text", text);
+        
+        
+        String new_str=str.substring(0, str.lastIndexOf('/')+1);
+        return "redirect:" + new_str;
     }
 
 }

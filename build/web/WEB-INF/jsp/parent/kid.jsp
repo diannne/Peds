@@ -207,7 +207,7 @@
                                             <c:forEach items="${visits}" var="visits">
                                                 <tr class="row1">
                                                     <th>
-                                                        <spring:url value="visit/${visits.id}" var="vis_id"/>
+                                                        <spring:url value="visit/${visits.id}/" var="vis_id"/>
                                                         <a href="${vis_id}" >
                                                             <c:out value="${visits.date}"/>
                                                         </a>

@@ -48,7 +48,7 @@
             <spring:url value="/admin/peds" var="peds" htmlEscape="true"/>
             <a href="${peds}">Pediatrics</a>
             &rsaquo;
-            <spring:url value="/admin/peds/specialty/change" var="sec" htmlEscape="true"/>
+            <spring:url value="/admin/peds/specialty/change/" var="sec" htmlEscape="true"/>
             <a href="${sec}">Specialties</a>
             &rsaquo;
             Add specialty

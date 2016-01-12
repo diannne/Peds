@@ -5,6 +5,7 @@
  */
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 import model.HibernateUtil;
 import model.Users;
@@ -226,5 +227,33 @@ public class DatabaseService implements IDatabaseService {
         } finally {
             session.close();
         }
+    }
+
+    @Override
+    public List listEntityPartialQuery(String table, ArrayList<String> columns, String query_text) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
+        Session session = sessionFactory.openSession();
+        session.setFlushMode(FlushMode.MANUAL);
+        ManagedSessionContext.bind(session);
+
+        String table_capitalized = table.substring(0, 1).toUpperCase() + table.substring(1);
+        
+        int cols = columns.size();
+        
+        String str_query = "from " + table_capitalized + " where ";
+        for (int i = 0; i < cols; i++){
+            
+            str_query += columns.get(i) + " like :crit"; 
+            if (i < cols-1)
+                str_query += " or ";
+        }
+        
+        Query query = session.createQuery(str_query);
+        query.setParameter("crit", "%"+query_text+"%");
+
+        session.flush();
+        
+        return query.list();
     }
 }

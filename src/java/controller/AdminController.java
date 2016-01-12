@@ -5,9 +5,12 @@
  */
 package controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import model.Consultations;
 import model.Pediatricians;
@@ -40,24 +43,36 @@ public class AdminController {
         return "/admin/pediatrics/main";
     }
 
-    @RequestMapping(value = {"/admin/users/admin/change"})
+    @RequestMapping(value = {"/admin/users/admin/change/"})
     public String changeAdminsPage(ModelMap map) {
         DatabaseService db = new DatabaseService();
-        map.addAttribute("list", db.listEntityByJoinCriteria("users", "userRoleses", "role", "ROLE_ADMIN"));
+        List results = (List) map.get("list");
+        if (results == null)
+            map.addAttribute("list", db.listEntityByJoinCriteria("users", "userRoleses", "role", "ROLE_ADMIN"));
+        else
+            map.addAttribute("list", results);
         return "/admin/users/admin/change";
     }
 
     @RequestMapping(value = {"/admin/users/secretary/change"})
     public String changeSecretPage(ModelMap map) {
         DatabaseService db = new DatabaseService();
-        map.addAttribute("list", db.listEntityByJoinCriteria("users", "userRoleses", "role", "ROLE_SECRET"));
+        List results = (List) map.get("list");
+        if (results == null)
+            map.addAttribute("list", db.listEntityByJoinCriteria("users", "userRoleses", "role", "ROLE_SECRET"));
+        else
+            map.addAttribute("list", results);
         return "/admin/users/secretary/change";
     }
 
     @RequestMapping(value = {"/admin/peds/specialty/change"})
     public String changeSpecPage(ModelMap map) {
         DatabaseService db = new DatabaseService();
-        map.addAttribute("list", db.listEntity("specialties"));
+        List results = (List) map.get("list");
+        if (results==null)
+            map.addAttribute("list", db.listEntity("specialties"));
+        else
+            map.addAttribute("list", results);
         return "/admin/pediatrics/specialty/change";
     }
 
@@ -302,8 +317,12 @@ public class AdminController {
     @RequestMapping(value = {"/admin/peds/doctor/change"})
     public String changeDoctorPage(ModelMap map) {
         DatabaseService db = new DatabaseService();
+        List results = (List) map.get("list");
         List drs = db.listEntity("pediatricians");
-        map.addAttribute("list", drs);
+         if (results == null)
+            map.addAttribute("list", drs);
+         else
+            map.addAttribute("list", results);
         return "/admin/pediatrics/doctor/change";
     }
 
@@ -434,5 +453,64 @@ public class AdminController {
         redirectAttrs.addFlashAttribute("info", "You have successfully deleted " + count.toString() + " rows!");
         //redirect to root page        
         return "redirect:/admin/peds/" + entity + "/change";
+    }
+    
+    
+    
+    @RequestMapping(value = {"/admin/users/admin/change/search",
+        "/admin/users/secretary/change/search","/admin/peds/doctor/change/search",
+        "/admin/peds/specialty/change/search"}, 
+            method = RequestMethod.POST)
+    public String searchForm(HttpServletRequest request, RedirectAttributes attr)
+            throws ClassNotFoundException, 
+            InstantiationException, IllegalAccessException{
+        String table = request.getParameter("table");
+        String text = request.getParameter("q_text");
+        String cols = request.getParameter("columns");
+        ArrayList<String> columns = new ArrayList<>();
+        
+        String[] result = cols.split(Pattern.quote("|"));
+        for (int x=0; x<result.length; x++)
+            columns.add(result[x]);
+        DatabaseService dbService = new DatabaseService();
+        List result_list = dbService.listEntityPartialQuery(table, columns, text);
+        String str = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        if (str.contains("secretary")) {
+            for (Iterator<Users> iterator = result_list.iterator(); iterator.hasNext();) {
+                Set roles = ((Users) iterator.next()).getUserRoleses();
+                String empty = "";
+                for (Object r : roles) {
+                    if ("ROLE_SECRET".equals(((UserRoles)r).getRole())) {
+                        empty = "ROLE_SECRET";
+                    }
+                }
+                if ("".equals(empty)){
+                    iterator.remove();
+                }
+            }
+        }
+        if (str.contains("admin/change")) {
+            for (Iterator<Users> iterator = result_list.iterator(); iterator.hasNext();) {
+                Set roles = ((Users) iterator.next()).getUserRoleses();
+                String empty = "";
+                for (Object r : roles) {
+                    if ("ROLE_ADMIN".equals(((UserRoles)r).getRole())) {
+                        empty = "ROLE_ADMIN";
+                    }
+                }
+                if ("".equals(empty)){
+                    iterator.remove();
+                }
+            }
+        }
+        attr.addFlashAttribute("list", result_list);
+        attr.addFlashAttribute("q_text", text);
+        
+        
+        //String new_str = str.subtring( 0, str.lastIndexOf("/"));
+        String new_str=str.substring(0, str.lastIndexOf('/')+1);
+        //str.substring(beginIndex, endIndex);
+        
+        return "redirect:" + new_str;
     }
 }

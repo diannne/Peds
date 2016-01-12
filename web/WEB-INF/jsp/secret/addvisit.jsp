@@ -175,13 +175,13 @@
                                 <div class="form-row">
                                     <div>
                                         <label>Prescription:</label>
-                                        <input type="text" value="${pres}" class="vTextField" name="spec" maxlength="255" />
+                                        <textarea name="pres" cols="40" rows="5" value="${pres}" maxlength="255" ></textarea>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div>
                                         <label>Comments:</label>
-                                        <input type="text" value="${comm}" class="vTextField" name="comm" maxlength="255" />
+                                        <textarea name="comm" cols="40" rows="5" value="${comm}" maxlength="255" ></textarea>
                                     </div>
                                 </div>
                             </fieldset>

@@ -13,7 +13,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Your children | Edelweiss Pediatrics</title>
+        <title>See Visit Details | Edelweiss Pediatrics</title>
         <spring:url value="/resources/images/favicon.ico" var="favicon" />
         <link rel="shortcut icon" href="${favicon}" />
         <spring:url value="/resources/css/main.css" var="mainCss" />
@@ -24,7 +24,7 @@
         <link href="${changeCss}" rel="stylesheet" />
         <spring:url value="/resources/css/base2.css" var="baseCss" />
         <link href="${baseCss}" rel="stylesheet" />
-        
+
         <spring:url value="/resources/css/jquery.datetimepicker.css" var="jqCss" />
         <link href="${jqCss}" rel="stylesheet" />
         <spring:url value="/resources/js/jquery.js" var="jqJS" />
@@ -113,122 +113,90 @@
                 <br class="clear" />
 
                 <div id="workarea" class="clearfix">
-                    <h2>Edit ${kid.name} 's profile</h2>
+                    <h2>Visit Details</h2>
                     <div id="content-main">
                         <form action="" method="post" id="user_form">
                             <input type="hidden"  name="${_csrf.parameterName}"   value="${_csrf.token}"/>
-
                             <div>
-                                <fieldset class="module aligned wide">
-                                    <div class="form-row field-username">
-                                        <div>
-                                            <label class="required">First Name:</label>
-                                            <input type="text" name="f_name" maxlength="30" value="${kid.name}"/>
+                                <fieldset class="module aligned ">
+                                    <h2>Visit information</h2>
+                                    <div class="form-row">
+                                        <div>                  
+                                            <label>Kid's Name:</label>
+                                            <input readonly="readonly" type="text" value="${f_name} ${lp_name}" required="required"  class="vTextField" name="f_name" maxlength="30" />
                                         </div>
                                     </div>
-                                    <div class="form-row field-username">
+                                    <div class="form-row">
                                         <div>
-                                            <label class="required">Last Name:</label>
-                                            <input type="text" readonly="on" name="l_name" maxlength="30" value="${parent.lastName}"/>
+                                            <label>Specialty:</label>
+
+                                            <spring:url value="/specialties/${spec_id}/" var="spec_var"/>
+                                            <a href="${spec_var}" >
+                                                <c:out value="${spec}"/>
+                                            </a>
                                         </div>
                                     </div>
-                                     <div class="form-row">
-                                    <div>
-                                        <label>Birth Date:</label>
-                                        <input id="datetimepicker" name="datetimepicker" type="text" value="${b_date}">
+                                    <div class="form-row">
+                                        <div>
+                                            <label>Pediatrician:</label>
+                                            <spring:url value="/pediatricians/${doc_id}/" var="doc_var"/>
+                                            <a href="${doc_var}" >
+                                                <c:out value="${doc}"/>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                                <script type="text/javascript">
-                                    $('#datetimepicker').datetimepicker({timepicker: false, format: 'd/m/Y'});
-                                </script>
+                                    <div class="form-row">
+                                        <div>
+                                            <label>Date:</label>
+                                            <input readonly="readonly" id="datetimepicker1" name="datetimepicker1" type="text" value="${date}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div>
+                                            <label>Start time:</label>
+                                            <input readonly="readonly" id="datetimepicker2" name="datetimepicker2" type="text" value="${s_time}">                                        
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-row">
+                                        <div>
+                                            <label>End time:</label>
+                                            <input readonly="readonly" id="datetimepicker3" name="datetimepicker3" type="text" value="${e_time}">
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                                <fieldset class="module aligned ">
+                                    <h2>Visit Concerns</h2>
+                                    <div class="form-row">
+                                        <div>                  
+                                            <label>Reason:</label>
+                                            <input type="text" value="${reason}" class="vTextField" name="reason" maxlength="255"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div>
+                                            <label>Prescription:</label>
+                                            <textarea name="pres" cols="40" rows="5" value="${pres}" maxlength="255" >${pres}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div>
+                                            <label>Comments:</label>
+
+                                            <textarea name="comm" cols="40" rows="5" value="${comm}" maxlength="255" >${comm}</textarea>
+                                        </div>
+                                    </div>
                                 </fieldset>
                                 <div class="submit-row">
                                     <input type="submit" value="Save" class="default" name="_save" />
                                     <input type="submit" value="Discard changes" class="default" name="_discard" />
-                                </div>
+                                </div>                                
                             </div>
                         </form>
                     </div>
-                </div>
-                <br class="clear" />
-                <br class="clear" />
-                <div id="workarea" class="clearfix">
-                    <h2>Medical History</h2>
-
-
-                    <div class="module" id="changelist">
-                        <fieldset class="module aligned ">
-                            <c:if test="${fn:length(visits) gt 0}">
-                                <div class="results">
-                                    <table id="result_list">
-                                        <thead>
-                                            <tr>
-
-
-
-                                                <th scope="col"  class="sortable">
-                                        <div class="text"><a href="?o=2.1">Date</a></div>
-                                        <div class="clear"></div>
-                                        </th>
-
-                                        <th scope="col"  class="sortable sorted ascending">
-                                        <div class="sortoptions">
-                                            <a class="sortremove" href="?o=" title="Remove from sorting"></a>
-                                            <a href="?o=-1" class="toggle ascending" title="Toggle sorting"></a>
-                                        </div>
-                                        <div class="text"><a href="?o=-1">Specialty</a></div>
-                                        <div class="clear"></div>
-                                        </th>
-
-                                        <th scope="col"  class="sortable">
-                                        <div class="text">Pediatrician</div>
-                                        <div class="clear"></div>
-                                        </th>
-
-                                        <th scope="col">
-                                        <div class="text">Reason</div>
-                                        <div class="clear"></div>
-                                        </th>
-
-                                        <th scope="col">
-                                        <div class="text">Prescription</div>
-                                        <div class="clear"></div>
-                                        </th>
-
-                                        <th scope="col">
-                                        <div class="text">Comments</div>
-                                        <div class="clear"></div>
-                                        </th>
-
-                                        </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            <c:forEach items="${visits}" var="visits">
-                                                <tr class="row1">
-                                                    <th>
-                                                        <spring:url value="visit/${visits.id}/" var="vis_id"/>
-                                                        <a href="${vis_id}" >
-                                                            <c:out value="${visits.date}"/>
-                                                        </a>
-                                                    </th>
-                                                    <td><c:out value="${visits.spec}"/></td>
-                                                    <td><c:out value="${visits.ped}"/></td>
-                                                    <td><c:out value="${visits.reason}"/></td>
-                                                    <td><c:out value="${visits.prescription}"/></td>
-                                                    <td><c:out value="${visits.comments}"/></td>                                                                                                 
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </c:if>
-                            <p class="paginator">
-                                ${fn:length(visits)} clinical visits
-                            </p>                         
-                        </fieldset>
-                    </div>
-
                 </div>
             </div>
             <br class="clear" />

@@ -60,11 +60,12 @@
 
                     <div class="module" id="changelist">
                         <div id="toolbar">
-                            <form id="changelist-search" action="../../search" method="post">
+                            <form id="changelist-search" action="search" method="post">
                                 <input type="hidden"  name="${_csrf.parameterName}"   value="${_csrf.token}"/>
-                                <input type="hidden"  name="class"   value="Pediatricians"/>
+                                <input type="hidden"  name="columns"   value="firstName|lastName"/>
+                                <input type="hidden"  name="table"   value="pediatricians"/>
                                 <div>
-                                    <input type="text" size="40" name="q_text" value="" id="searchbar" />
+                                    <input type="text" size="40" name="q_text" value="${q_text}"/>
                                     <input type="submit" value="Search" />
                                 </div>
                             </form>

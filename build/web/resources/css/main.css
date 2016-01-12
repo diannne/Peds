@@ -110,7 +110,7 @@ div#presentation div.menubox {
     background-repeat: repeat-x;
     background-color: #FFFFFF;
     color: white;
-    width: 220px;
+    width: 260px;
     cursor: pointer;
     text-align: center;
     font-size: small;
@@ -137,6 +137,7 @@ div#presentation div#peds p {
 }
 div#presentation div#visit p {
     background: url(../images/contact.png) no-repeat;
+    
 }
 
 div#presentation div#reports { margin-top: 0.8em; }

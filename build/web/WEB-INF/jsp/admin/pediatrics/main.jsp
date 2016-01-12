@@ -62,14 +62,14 @@
                         <table>
                             <caption><a href="" class="section">Peds</a></caption>
                             <tr>
-                                <th scope="row"><a href="<spring:url value="/admin/peds/doctor/change" htmlEscape="true" />">Doctors</a></th>
-                                <td><a href="<spring:url value="/admin/peds/doctor/add" htmlEscape="true" />" class="addlink">Add</a></td>
-                                <td><a href="<spring:url value="/admin/peds/doctor/change" htmlEscape="true" />" class="changelink">Change</a></td>
+                                <th scope="row"><a href="<spring:url value="/admin/peds/doctor/change/" htmlEscape="true" />">Doctors</a></th>
+                                <td><a href="<spring:url value="/admin/peds/doctor/add/" htmlEscape="true" />" class="addlink">Add</a></td>
+                                <td><a href="<spring:url value="/admin/peds/doctor/change/" htmlEscape="true" />" class="changelink">Change</a></td>
                             </tr>
                             <tr>
-                                <th scope="row"><a href="<spring:url value="/admin/peds/specialty/change" htmlEscape="true" />">Specialties</a></th>
+                                <th scope="row"><a href="<spring:url value="/admin/peds/specialty/change/" htmlEscape="true" />">Specialties</a></th>
                                 <td><a href="<spring:url value="/admin/peds/specialty/add/" htmlEscape="true" />" class="addlink">Add</a></td>
-                                <td><a href="<spring:url value="/admin/peds/specialty/change" htmlEscape="true" />" class="changelink">Change</a></td>
+                                <td><a href="<spring:url value="/admin/peds/specialty/change/" htmlEscape="true" />" class="changelink">Change</a></td>
                             </tr>
                         </table>
                     </div>

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Consultations;
@@ -101,7 +102,6 @@ public class HomeController {
     }
     
     @RequestMapping(value = "/change_pass/", method = RequestMethod.POST)
-
     public String passChangeForm(HttpServletRequest request, Principal user, 
             RedirectAttributes redirectAttrs) {
         String old_pass, new_pass1, new_pass2;
@@ -146,23 +146,7 @@ public class HomeController {
         }
         return "index";
     }
-    
-    @RequestMapping(value = "/admin/search", method = RequestMethod.POST)
-    public String searchForm(HttpServletRequest request) throws ClassNotFoundException, 
-            InstantiationException, IllegalAccessException{
-        String className = "model." + request.getParameter("class");
-        String role = request.getParameter("role");
-        String text = request.getParameter("q_text");
-        System.out.println("entity is " + className);
-        System.out.println("role is " + role);
-        System.out.println("text is " + text);
-        Object xyz = Class.forName(className).newInstance();
-        
-        DatabaseService dbService = new DatabaseService();
-        dbService.findEntitiesMatchingPartialQuery("username", text, xyz);
-        return "";
-    }
-    
+ 
     
     @RequestMapping(value = {"/specialties/"})
     public String viewSpecs(ModelMap map) {
@@ -291,6 +275,98 @@ public class HomeController {
 
         redirectAttrs.addFlashAttribute("info", "Succesfully updated children information!");
         return "redirect:/medical-history/" + id + "/";
+    }
+    
+    
+    @RequestMapping(value = {"/medical-history/{id}/visit/{vid}/"})
+    public String viewVisit(@PathVariable String id, 
+            @PathVariable String vid, 
+            ModelMap map, Principal user,
+            RedirectAttributes redirectAttrs) throws ParseException {
+        if (user == null){
+            return "index";
+        }  
+        
+        DatabaseService db = new DatabaseService();
+        Object p = db.getEntityByName("email", "parents", user.getName());
+        
+        Object o = db.getEntityById("id", "kids", Integer.parseInt(id));
+        
+       
+        Kids k = (Kids) o;
+        
+        Parents pk = k.getParents();
+
+        o = db.getEntityById("id", "consultations", Integer.parseInt(vid));
+        if (o == null) {
+            redirectAttrs.addFlashAttribute("message", "Entity selected has not been found!");
+            return "redirect:/secretary";
+        }
+        Consultations c = (Consultations) o;
+
+        map.addAttribute("f_name", k.getName());
+
+        map.addAttribute("fp_name", pk.getFirstName());
+        map.addAttribute("lp_name", pk.getLastName());
+        map.addAttribute("kid", k.getId());
+        map.addAttribute("pid", pk.getId());
+
+        map.addAttribute("comm", c.getComments());
+        map.addAttribute("reason", c.getReason());
+        map.addAttribute("pres", c.getPrescription());
+
+        DateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd");
+        fromFormat.setLenient(false);
+        DateFormat toFormat = new SimpleDateFormat("dd/MM/yyyy");
+        toFormat.setLenient(false);
+        String dateStr = c.getVisitDate().toString();
+        Date date = fromFormat.parse(dateStr);
+        map.addAttribute("date", toFormat.format(date));
+        DateFormat fromFormatTime = new SimpleDateFormat("HH:mm:ss");
+        fromFormatTime.setLenient(false);
+        DateFormat toFormatTime = new SimpleDateFormat("HH:mm");
+        toFormatTime.setLenient(false);
+        String time = c.getStartTime().toString();
+        date = fromFormatTime.parse(time);
+        map.addAttribute("s_time", toFormatTime.format(date));
+        time = c.getEndTime().toString();
+        date = fromFormatTime.parse(time);
+        map.addAttribute("e_time", toFormatTime.format(date));
+
+        String spec = c.getPediatricians().getSpecialties().getName();
+        map.addAttribute("doc", c.getPediatricians().getFirstName() + " " + c.getPediatricians().getLastName());
+        map.addAttribute("spec", spec);
+        map.addAttribute("doc_id", c.getPediatricians().getId());
+        map.addAttribute("spec_id", c.getPediatricians().getSpecialties().getId());
+        
+        return "/parent/visitform";
+    }
+    
+    @RequestMapping(value = {"/medical-history/{id}/visit/{vid}/"}, method = RequestMethod.POST)
+    public String editVisitFormPost(@PathVariable String id,
+            @PathVariable String vid,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttrs) throws ParseException {
+        String _save = request.getParameter("_save");
+        String _discard = request.getParameter("_discard");
+
+        
+        if (_discard != null) {
+            return "redirect:/medical-history/" + id + "/visit/" + vid + "/";
+        } else if (_save != null) {
+            
+            DatabaseService db = new DatabaseService();
+            Object o = db.getEntityById("id", "consultations", Integer.parseInt(vid));
+            Consultations visit = (Consultations) o;
+            
+            visit.setComments(request.getParameter("comm"));
+            visit.setReason(request.getParameter("reason"));
+            visit.setPrescription(request.getParameter("pres"));
+            
+            db.updateEntity(visit);
+        }
+
+        return "redirect:/medical-history/" + id + "/visit/" + vid + "/";
     }
     
     private String formatDate(Date visitDate) throws ParseException {

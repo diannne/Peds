@@ -48,7 +48,7 @@
             <spring:url value="/admin/peds" var="peds" htmlEscape="true"/>
             <a href="${peds}">Pediatrics</a>
             &rsaquo;
-            <spring:url value="/admin/peds/doctor/change" var="doctor" htmlEscape="true"/>
+            <spring:url value="/admin/peds/doctor/change/" var="doctor" htmlEscape="true"/>
             <a href="${doctor}">Doctors</a>
             &rsaquo;
             Update doctor

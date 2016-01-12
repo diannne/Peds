@@ -5,6 +5,7 @@
  */
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,4 +31,6 @@ public interface IDatabaseService {
     
     public List listEntityByJoinIdCriteria(String table, String propertyName, String criteria_column, 
             Integer id, String sndc, Integer sndt);
+    
+    public List listEntityPartialQuery(String table, ArrayList<String> columns, String query_text);
 }

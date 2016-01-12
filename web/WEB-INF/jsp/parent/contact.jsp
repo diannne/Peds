@@ -17,8 +17,7 @@
         <spring:url value="/resources/images/favicon.ico" var="favicon" />
         <link rel="shortcut icon" href="${favicon}" />
         <spring:url value="/resources/css/main.css" var="mainCss" />
-        <link href="${mainCss}" rel="stylesheet" />
-        
+        <link href="${mainCss}" rel="stylesheet" />        
     </head>
 
     <body>
@@ -96,36 +95,24 @@
                 <br class="clear" />
                 <br class="clear" />
 
-                 <div id="content-main">
-                    
-                        <div>
-                            <fieldset class="module aligned ">
-                    <div class="leftcol">
-                        <img src="images/baby-pic.jpg" alt="Baby" />
-                        <br />
-                        <a href="http://www.facebook.com/pages/EdellWeissPeds/130887193677117" target="_blank">
-                            <img src="images/facebook-icon.jpg" width="183" height="73" border="0" style="margin-left:65px" />
-                        </a>
+                <div id="workarea" class="clearfix">
+
+                    <div id="presentation" class="clearfix">
+
+                        <div id="visit" class="menubox">
+                            <h2>Contact Us</h2>
+                            <p><p>5050 Wave Hill
+                                <br />
+                                Suite 100
+                                <br />
+                                New York 43017
+                                <br />
+                                Phone: 614 935-5151
+                                <br />
+                                Fax: 825 962-9578</p></p>
+                        </div>
+
                     </div>
-                    <div class="menubox">
-                        <h1 class="contact">
-                            <span>Contact Us</span>
-                        </h1>
-                        
-
-                        <p>5050 Wave Hill<br />
-                            Suite 100
-                            <br />
-                            New York 43017 </p>
-                        <p>Phone: 614 935-5151</p>
-                        <p>Fax: 825 962-9578</p>
-
-
-                        <p>&nbsp;</p>
-                        
-                    </div>
-                                </fieldset >
-                                </div>
                 </div>
             </div>
             <br class="clear" />
