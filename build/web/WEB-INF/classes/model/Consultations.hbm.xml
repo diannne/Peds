@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 8, 2016 7:45:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Consultations" table="consultations" catalog="peds" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="kids" class="model.Kids" fetch="select" cascade="save-update">
+            <column name="kid_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="pediatricians" class="model.Pediatricians" fetch="select"
+            >
+            <column name="ped_id" not-null="true" />
+        </many-to-one>
+        <property name="visitDate" type="date">
+            <column name="visit_date" length="10" />
+        </property>
+        <property name="startTime" type="time">
+            <column name="start_time" length="8" />
+        </property>
+        <property name="endTime" type="time">
+            <column name="end_time" length="8" />
+        </property>
+        <property name="reason" type="string">
+            <column name="reason" />
+        </property>
+        <property name="prescription" type="string">
+            <column name="prescription" />
+        </property>
+        <property name="comments" type="string">
+            <column name="comments" />
+        </property>
+    </class>
+</hibernate-mapping>

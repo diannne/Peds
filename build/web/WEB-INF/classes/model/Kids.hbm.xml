@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 8, 2016 7:45:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Kids" table="kids" catalog="peds" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="parents" class="model.Parents" fetch="select" cascade="save-update">
+            <column name="parent_id" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="30" />
+        </property>
+        <property name="birthDate" type="date">
+            <column name="birth_date" length="10" />
+        </property>
+        <set name="consultationses" table="consultations" inverse="true" lazy="true" 
+             fetch="select" cascade="all">
+            <key>
+                <column name="kid_id" not-null="true" />
+            </key>
+            <one-to-many class="model.Consultations" />
+        </set>
+    </class>
+</hibernate-mapping>

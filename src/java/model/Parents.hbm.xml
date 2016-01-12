@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 6, 2016 1:22:03 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Parents" table="parents" catalog="peds" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="firstName" type="string">
+            <column name="first_name" length="30" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="last_name" length="30" />
+        </property>
+        <property name="address" type="string">
+            <column name="address" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="80" />
+        </property>
+        <property name="telephone" type="string">
+            <column name="telephone" length="20" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="45" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="45" not-null="true" />
+        </property>
+        <set name="kidses" table="kids" inverse="true" lazy="true" fetch="select" cascade="all">
+            <key>
+                <column name="parent_id" not-null="true" />
+            </key>
+            <one-to-many class="model.Kids" />
+        </set>
+    </class>
+</hibernate-mapping>
